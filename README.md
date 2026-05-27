@@ -6,6 +6,37 @@ CSL-стиль для оформления библиографического 
 
 ## Использование
 
+> [!IMPORTANT]
+>
+> Добавьте код ниже перед блоком `#bibliography` для правильных отступов (основа взята [отсюда](https://github.com/typst/typst/issues/2639#issuecomment-3394562301)):
+
+```typst
+#show bibliography: bib-it => {
+  set block(inset: 0in)
+  set par(leading: 1em)
+
+  show block: block-it => context {
+    if block-it.body == auto {
+      block-it
+    } else {
+      show regex("^(\d+\.)\s+"): match => {
+        let num = match.text.trim()
+        box(width: 2.5em, align(left)[#num])
+      }
+
+      if block-it.body.func() != [].func() {
+        block-it.body
+        parbreak()
+      } else {
+        par(block-it.body)
+      }
+    }
+  }
+
+  bib-it
+}
+```
+
 Скопируйте файл `gost-7-1-2003.csl` в папку проекта и подключите в документе Typst:
 
 ```typst
